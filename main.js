@@ -110,11 +110,15 @@ function addLike(){
     while(j < posts.length && !found){
         console.log(this.dataset.id == posts[j].id);
         if(this.dataset.id == posts[j].id){
-            console.log(posts[j].likes);
-            posts[j].likes++;
-            console.log(posts[j].likes);
-            likedPosts.push(posts[j].id);
+            if(!likedPosts.includes(posts[j].id)){
+                posts[j].likes++;
+                likedPosts.push(posts[j].id);
+            }else{
+                posts[j].likes--;
+                likedPosts.splice(likedPosts.indexOf(posts[j].id),1);
+            }
             renderPosts();
+            found = true;
         }
         j++;
     }
