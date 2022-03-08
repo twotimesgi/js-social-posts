@@ -38,7 +38,7 @@ const posts = [
         "media": "https://unsplash.it/600/400?image=24",
         "author": {
             "name": "Luca Formicola",
-            "image": ""
+            "image": null
         },
         "likes": 56,
         "created": "2021-04-03"
@@ -64,38 +64,52 @@ renderPosts();
 function renderPosts(){
     let content = "";
     for (let i = 0; i < posts.length; i++) {
+        let liked;
         likedPosts.includes(posts[i].id) ? liked = "like-button--liked" : liked = "";
         content += `
-        <div class="post">
-            <div class="post__header">
+                <div class="post">
+                <div class="post__header">
                 <div class="post-meta">                    
-                    <div class="post-meta__icon">
-                        <img class="profile-pic" src="${posts[i].author.image}" alt="${posts[i].author.name}">                    
+                <div class="post-meta__icon">`;
+
+        if(posts[i].author.image == null){
+            let firstLetter = posts[i].author.name.split(" ")[0][0];
+            let secondLetter = posts[i].author.name.split(" ")[1][0];
+            content+= `<div class="profile-pic-default"><span>${firstLetter+secondLetter}</span></div>`
+        }else{ 
+            content += `<img class="profile-pic" src="${posts[i].author.image}" alt="${posts[i].author.name}">`;
+        }
+
+        content += `
                     </div>
                     <div class="post-meta__data">
-                        <div class="post-meta__author">${posts[i].author.name}</div>
-                        <div class="post-meta__time">${posts[i].created}</div>
+                    <div class="post-meta__author">${posts[i].author.name}</div>
+                    <div class="post-meta__time">${posts[i].created}</div>
                     </div>                    
-                </div>
-            </div>
-            <div class="post__text">${posts[i].content}</div>
-            <div class="post__image">
-                <img src="${posts[i].media}" alt="">
-            </div>
-            <div class="post__footer">
-                <div class="likes js-likes">
+                    </div>
+                    </div>
+                    <div class="post__text">${posts[i].content}</div>
+                    <div class="post__image">
+                    <img src="${posts[i].media}" alt="">
+                    </div>
+                    <div class="post__footer">
+                    <div class="likes js-likes">
                     <div class="likes__cta">
-                        <a class="like-button ` + liked + ` js-like-button" href="#${posts[i].id}" data-id="${posts[i].id}">
-                            <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
-                            <span class="like-button__label">Mi Piace</span>
-                        </a>
+                    <a class="like-button `;
+
+        if(likedPosts.includes(posts[i].id))  content += "like-button--liked";  
+   
+        content += ` js-like-button" href="#${posts[i].id}" data-id="${posts[i].id}">
+                    <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
+                    <span class="like-button__label">Mi Piace</span>
+                    </a>
                     </div>
                     <div class="likes__counter">
-                        Piace a <b id="like-counter-1" class="js-likes-counter">${posts[i].likes}</b> persone
+                    Piace a <b id="like-counter-1" class="js-likes-counter">${posts[i].likes}</b> persone
                     </div>
-                </div>
-            </div>
-        </div>`;
+                    </div>
+                    </div>
+                    </div>`;
     }
     container.innerHTML = content;
     btns = container.querySelectorAll(".like-button");
@@ -123,3 +137,4 @@ function addLike(){
         j++;
     }
 }
+
