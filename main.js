@@ -38,7 +38,7 @@ const posts = [
         "media": "https://unsplash.it/600/400?image=24",
         "author": {
             "name": "Luca Formicola",
-            "image": null
+            "image": ""
         },
         "likes": 56,
         "created": "2021-04-03"
@@ -57,14 +57,14 @@ const posts = [
 ];
 
 let likedPosts = [];
-let likeBtns;
 const container = document.getElementById("container");
-refreshPosts();
+let btns;
+renderPosts();
 
-
-function refreshPosts(){
+function renderPosts(){
     let content = "";
-    for(let i = 0; i < posts.length; i++){
+    for (let i = 0; i < posts.length; i++) {
+        likedPosts.includes(posts[i].id) ? liked = "like-button--liked" : liked = "";
         content += `
         <div class="post">
             <div class="post__header">
@@ -85,7 +85,7 @@ function refreshPosts(){
             <div class="post__footer">
                 <div class="likes js-likes">
                     <div class="likes__cta">
-                        <a class="like-button  js-like-button" href="#${posts[i].id}" data-id="${posts[i].id}">
+                        <a class="like-button ` + liked + ` js-like-button" href="#${posts[i].id}" data-id="${posts[i].id}">
                             <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
                             <span class="like-button__label">Mi Piace</span>
                         </a>
@@ -96,22 +96,26 @@ function refreshPosts(){
                 </div>
             </div>
         </div>`;
-        }
+    }
     container.innerHTML = content;
+    btns = container.querySelectorAll(".like-button");
+    for(let i = 0; i < btns.length; i++){
+        btns[i].addEventListener("click", addLike);
+    }
 }
 
-function userLike(){
-    let j = 0;
+function addLike(){
     let found = false;
+    let j = 0;
     while(j < posts.length && !found){
-       if(posts[j].id == this.dataset.id){
-           posts[j].likes++;
-           found = true;
-           likedPosts.push(posts[j].id);
-           let postBtn = document.querySelector(`.like-button[data-id="${posts[j].id}"]`);
-           console.log(postBtn);
-           postBtn.classList.add("like-button--liked");
-       } 
-       j++;
+        console.log(this.dataset.id == posts[j].id);
+        if(this.dataset.id == posts[j].id){
+            console.log(posts[j].likes);
+            posts[j].likes++;
+            console.log(posts[j].likes);
+            likedPosts.push(posts[j].id);
+            renderPosts();
+        }
+        j++;
     }
 }
