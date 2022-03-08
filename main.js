@@ -101,7 +101,7 @@ function renderPosts(){
 
         if(likedPosts.includes(posts[i].id))  content += "like-button--liked";  
    
-        content += ` js-like-button" href="#${posts[i].id}" data-id="${posts[i].id}">
+        content += ` js-like-button" href="#!" data-id="${posts[i].id}">
                     <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
                     <span class="like-button__label">Mi Piace</span>
                     </a>
