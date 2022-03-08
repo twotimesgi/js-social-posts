@@ -64,7 +64,9 @@ renderPosts();
 function renderPosts(){
     let content = "";
     for (let i = 0; i < posts.length; i++) {
-        let liked;
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        let postDate = new Date(posts[i].created).toLocaleDateString("it-IT",options)
+        let liked; 
         likedPosts.includes(posts[i].id) ? liked = "like-button--liked" : liked = "";
         content += `
                 <div class="post">
@@ -84,7 +86,7 @@ function renderPosts(){
                     </div>
                     <div class="post-meta__data">
                     <div class="post-meta__author">${posts[i].author.name}</div>
-                    <div class="post-meta__time">${posts[i].created}</div>
+                    <div class="post-meta__time">${postDate}</div>
                     </div>                    
                     </div>
                     </div>
