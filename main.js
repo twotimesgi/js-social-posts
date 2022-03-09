@@ -56,28 +56,24 @@ const posts = [
     }
 ];
 
-let likedPosts = [];
+let likedPosts = []; //Contiene gli ID dei post che hanno ricevuto like!
 const container = document.getElementById("container");
-let btns;
-renderPosts();
+renderPosts(); //Sincronizza l'HTML e il contenuto di posts[].
+
 
 function renderPosts(){
     let content = "";
     for (let i = 0; i < posts.length; i++) {
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        let postDate = new Date(posts[i].created).toLocaleDateString("it-IT",options)
-        let liked; 
-        likedPosts.includes(posts[i].id) ? liked = "like-button--liked" : liked = "";
+        let postDate = new Date(posts[i].created).toLocaleDateString("it-IT"); //Data formattata italiana
         content += `
                 <div class="post">
                 <div class="post__header">
                 <div class="post-meta">                    
                 <div class="post-meta__icon">`;
 
-        if(posts[i].author.image == null){
-            let firstLetter = posts[i].author.name.split(" ")[0][0];
-            let secondLetter = posts[i].author.name.split(" ")[1][0];
-            content+= `<div class="profile-pic-default"><span>${firstLetter+secondLetter}</span></div>`
+        if(posts[i].author.image == null){ //Genero un elemento di fallback se author.image = null
+            let initials = getInitials(posts[i].author.name);
+            content+= `<div class="profile-pic-default"><span>${initials}</span></div>`
         }else{ 
             content += `<img class="profile-pic" src="${posts[i].author.image}" alt="${posts[i].author.name}">`;
         }
@@ -99,9 +95,10 @@ function renderPosts(){
                     <div class="likes__cta">
                     <a class="like-button `;
 
-        if(likedPosts.includes(posts[i].id))  content += "like-button--liked";  
-   
-        content += ` js-like-button" href="#!" data-id="${posts[i].id}">
+        //assegno la classe like-button--liked se il l'id del post è contenuto in likedPosts[]
+        if(likedPosts.includes(posts[i].id))  content += "like-button--liked"; 
+
+        content += ` js-like-button" href="#" data-id="${posts[i].id}">
                     <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
                     <span class="like-button__label">Mi Piace</span>
                     </a>
@@ -113,30 +110,37 @@ function renderPosts(){
                     </div>
                     </div>`;
     }
+    //Inserisco il contenuto generato nell'elemento #container
     container.innerHTML = content;
-    btns = container.querySelectorAll(".like-button");
-    for(let i = 0; i < btns.length; i++){
-        btns[i].addEventListener("click", addLike);
-    }
+    //Assegno un eventListener ad ogni elemento con classe .js-like-button 
+    container.querySelectorAll(".js-like-button").forEach(btn => btn.addEventListener("click", toggleLike));
 }
 
-function addLike(){
-    let found = false;
+function toggleLike(e){
+    //Rimuovo il comportamento di default
+    e.preventDefault();
     let j = 0;
-    while(j < posts.length && !found){
+
+    while(j < posts.length){
         console.log(this.dataset.id == posts[j].id);
         if(this.dataset.id == posts[j].id){
             if(!likedPosts.includes(posts[j].id)){
+                //Se likedPosts[] non contiene l'id lo aggiungo e incremento i like di 1
                 posts[j].likes++;
                 likedPosts.push(posts[j].id);
             }else{
+                //Se likedPosts[] contiene l'id lo rimuovo e decremento i like di 1
                 posts[j].likes--;
                 likedPosts.splice(likedPosts.indexOf(posts[j].id),1);
             }
+            //Sincronizza l'HTML e il contenuto di posts[].
             renderPosts();
-            found = true;
+            break;
         }
         j++;
     }
 }
 
+function getInitials(name){
+    return name.split(" ")[0][0] +  name.split(" ")[1][0];
+}

@@ -21,11 +21,12 @@ h1 {
     margin: 24px 0;
 }
 
-.posts-list {
+.posts-list{
     width: 90%;
     max-width: 600px;
     margin: 0 auto;
 }
+
 
 .posts-list > * {
     margin-bottom: 24px;
