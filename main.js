@@ -8,7 +8,7 @@ const posts = [
             "image": "https://unsplash.it/300/300?image=15"
         },
         "likes": 80,
-        "created": "2021-06-25"
+        "created": "2021-09-20"
     },
     {
         "id": 2,
@@ -144,3 +144,26 @@ function toggleLike(e){
 function getInitials(name){
     return name.split(" ")[0][0] +  name.split(" ")[1][0];
 }
+
+function newPost(post){
+    //Cerco l'id max
+    let max = 0;
+    posts.forEach(postObj => {if(postObj.id > max) max = postObj.id;});
+    //Assegno l'id più grande + 1 al nuovo post
+    post.id = max+1; 
+    //Aggiungo il post a Posts[]
+    posts.unshift(post);
+    //Sincronizza l'HTML e il contenuto di posts[].
+    renderPosts();
+}
+
+newPost({
+    "content": "Metti il piede in quella rientranza a forma di vertebra di moffetta!",
+    "media": "https://www.ilpais.it/wp-content/uploads/2018/08/maxresdefault.jpg",
+    "author": {
+        "name": "Luigi Bardella Gerbi",
+        "image": null
+    },
+    "likes": 9999999,
+    "created": "2021-09-25"
+})
